@@ -1,4 +1,4 @@
-# auto-resume [![Build Status](https://travis-ci.com/kdelalic/auto-resume.svg?branch=master)](https://travis-ci.com/kdelalic/auto-resume)
+# auto-resume [![Build Status](https://travis-ci.org/kdelalic/auto-resume.svg?branch=master)](https://travis-ci.org/kdelalic/auto-resume)
 
 Each new git tag automatically generates a release with `resume.pdf`, pushes `resume.png` to master for preview in the readme, and triggers a Netlify build hook that pushes the new `resume.pdf` to <https://karlodelalic.me/resume.pdf>.
 
