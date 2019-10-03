@@ -1,0 +1,31 @@
+sudo: required
+language: minimal
+services: docker
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install poppler-utils
+
+before_script:
+  # We use the docker image from https://hub.docker.com/r/dxjoke/tectonic-docker/
+  - docker pull dxjoke/tectonic-docker
+
+script:
+  # Compiling only resume.tex:
+  - docker run --mount src=$TRAVIS_BUILD_DIR,target=/usr/src/tex,type=bind dxjoke/tectonic-docker /bin/sh -c "tectonic src/resume.tex -o ./"
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file: resume.pdf
+  skip_cleanup: true
+  on:
+    tags: true
+
+after_deploy:
+  # Generate preview png
+  - pdftoppm resume.pdf resume -png -f 1 -singlefile -rx 300 -ry 300
+  # Push resume.png to master for preview in README.md
+  - ./travis-push.sh
+  # Trigger Netlify build after build pass which pulls latest release
+  - curl -X POST -d {} https://api.netlify.com/build_hooks/$NETLIFY_BUILD_HOOK
