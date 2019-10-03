@@ -4,6 +4,7 @@ services: docker
 
 before_install:
   - sudo apt-get update
+  # We use poppler-utils for converting pdf to png
   - sudo apt-get install poppler-utils
 
 before_script:
@@ -11,7 +12,7 @@ before_script:
   - docker pull dxjoke/tectonic-docker
 
 script:
-  # Compiling only resume.tex:
+  # Compile src/resume.tex and output to root of repo
   - docker run --mount src=$TRAVIS_BUILD_DIR,target=/usr/src/tex,type=bind dxjoke/tectonic-docker /bin/sh -c "tectonic src/resume.tex -o ./"
 
 deploy:
