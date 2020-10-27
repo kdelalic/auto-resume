@@ -1,4 +1,4 @@
-sudo: required
+arch: arm64
 language: minimal
 services: docker
 
