@@ -3,9 +3,9 @@ language: minimal
 services: docker
 
 before_install:
-  - sudo apt-get update
+  - apt-get update
   # We use poppler-utils for converting pdf to png
-  - sudo apt-get install poppler-utils
+  - apt-get install poppler-utils
 
 before_script:
   # We use the docker image from https://hub.docker.com/r/dxjoke/tectonic-docker/
@@ -19,7 +19,7 @@ deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
   file: resume.pdf
-  skip_cleanup: true
+  cleanup: true
   on:
     tags: true
 
