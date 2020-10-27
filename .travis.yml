@@ -1,4 +1,4 @@
-arch: arm64
+arch: amd64
 language: minimal
 services: docker
 
