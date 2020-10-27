@@ -3,9 +3,9 @@ language: minimal
 services: docker
 
 before_install:
-  - apt-get update
+  - sudo apt-get update
   # We use poppler-utils for converting pdf to png
-  - apt-get install poppler-utils
+  - sudo apt-get install poppler-utils
 
 before_script:
   # We use the docker image from https://hub.docker.com/r/dxjoke/tectonic-docker/
