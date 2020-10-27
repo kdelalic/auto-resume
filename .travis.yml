@@ -2,10 +2,11 @@ arch: amd64
 language: minimal
 services: docker
 
-before_install:
-  - sudo apt-get update
-  # We use poppler-utils for converting pdf to png
-  - sudo apt-get install poppler-utils
+addons:
+  apt:
+    update: true
+    packages: 
+      - poppler-utils # We use poppler-utils for converting pdf to png
 
 before_script:
   # We use the docker image from https://hub.docker.com/r/dxjoke/tectonic-docker/
