@@ -82,6 +82,8 @@
 \RequirePackage{parskip}
 % Needed to deal hyperlink
 \RequirePackage[hidelinks,unicode]{hyperref}
+% Needed to absolutely position updated text
+\RequirePackage[absolute,overlay]{textpos}
 \hypersetup{%
   pdftitle={},
   pdfauthor={},

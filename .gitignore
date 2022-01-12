@@ -3,3 +3,5 @@
 *.out
 *.synctex*
 *.pdf
+*.fls
+*.fdb_latexmk
