@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Pull tectonic Docker image
+        run: docker pull dxjoke/tectonic-docker
+
+      - name: Build PDF with tectonic
+        run: |
+          docker run --mount src=${{ github.workspace }},target=/usr/src/tex,type=bind dxjoke/tectonic-docker /bin/sh -c "tectonic src/resume.tex -o ./"
+
+      - name: Install poppler-utils
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Generate PNG preview
+        run: pdftoppm resume.pdf resume -png -f 1 -singlefile -rx 300 -ry 300
+
+      - name: Commit and push resume.png
+        if: github.ref == 'refs/heads/master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add resume.png
+          git commit -m "GitHub Actions build: ${{ github.run_number }} [skip ci]" || echo "No changes to commit"
+          git push
+
+      - name: Trigger Netlify build
+        if: github.ref == 'refs/heads/master'
+        env:
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          curl -X POST -d '{}' "$NETLIFY_BUILD_HOOK"
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: resume.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
