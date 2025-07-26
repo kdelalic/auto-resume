@@ -27,6 +27,7 @@ jobs:
       - name: Install poppler-utils
         run: sudo apt-get update && sudo apt-get install -y poppler-utils
 
+
       - name: Generate PNG preview
         run: pdftoppm resume.pdf resume -png -f 1 -singlefile -rx 300 -ry 300
 
@@ -48,13 +49,21 @@ jobs:
         run: |
           curl -X POST -d '{}' "$NETLIFY_BUILD_HOOK"
 
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: resume-pdf
+          path: resume.pdf
+
   release:
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Download PDF artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: resume-pdf
 
       - name: Upload release asset
         uses: softprops/action-gh-release@v2
