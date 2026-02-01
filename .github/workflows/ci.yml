@@ -42,12 +42,12 @@ jobs:
           git commit -m "GitHub Actions build: ${{ github.run_number }} [skip ci]" || echo "No changes to commit"
           git push
 
-      - name: Trigger Netlify build
+      - name: Trigger build
         if: github.ref == 'refs/heads/master'
         env:
-          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+          BUILD_HOOK: ${{ secrets.BUILD_HOOK }}
         run: |
-          curl -X POST -d '{}' "$NETLIFY_BUILD_HOOK"
+          curl -X POST -d '{}' "$BUILD_HOOK"
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
